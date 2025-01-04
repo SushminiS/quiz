@@ -14,3 +14,10 @@ export const demoQuestion = {
   ],
   correctAnswer: 1,
 };
+
+// Generate 15 questions using the demo question for each quiz
+export const quizQuestions = {
+  1: Array(15).fill(demoQuestion),
+  2: Array(15).fill(demoQuestion),
+  3: Array(15).fill(demoQuestion),
+};
