@@ -1,30 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import axios from 'axios';
-
-const API_URL = 'http://10.32.9.17:3000/api';
-
-
-const demoQuestion = {
-  question: 'What is the main function of proteins?',
-  options: [
-    'Energy storage',
-    'Building and repairing tissues',
-    'Temperature regulation',
-    'Hormone production',
-  ],
-  correctAnswer: 1,
-};
+import questions from '../src/data/questions'; // Importing questions.js
 
 function ResultsScreen({ route, navigation }) {
-  const { quizId, answers } = route.params;
-  const questions = Array(5).fill(demoQuestion);
+  const { answers } = route.params; // Retrieve answers passed from QuizScreen.
   const [score, setScore] = useState(0);
 
   useEffect(() => {
     calculateScore();
   }, []);
 
+  // Calculate the score based on the user's answers
   const calculateScore = () => {
     const totalScore = questions.reduce((acc, question, index) => {
       return acc + (answers[index] === question.correctAnswer ? 1 : 0);
@@ -36,7 +22,20 @@ function ResultsScreen({ route, navigation }) {
     <ScrollView style={styles.container}>
       <View style={styles.scoreCard}>
         <Text style={styles.scoreTitle}>Your Score</Text>
-        <Text style={styles.scoreText}>{score} / {questions.length}</Text>
+        <Text style={styles.scoreText}>
+          {score} / {questions.length}
+        </Text>
+        
+        {/* Displaying congratulations message if score is 10 or more */}
+        {score >= 10 && (
+          <Text style={styles.congratulationsText}>Congratulations! Great job!</Text>
+        )}
+      </View>
+
+      <View style={styles.scoreCard}>
+        <Text style={styles.scoreSubtitle}>
+          Below are the questions, your answers, and the correct answers.
+        </Text>
       </View>
 
       {questions.map((question, qIndex) => (
@@ -44,19 +43,29 @@ function ResultsScreen({ route, navigation }) {
           <Text style={styles.question}>
             {qIndex + 1}. {question.question}
           </Text>
-          
+
           {question.options.map((option, oIndex) => (
             <View
               key={oIndex}
               style={[
                 styles.option,
                 oIndex === question.correctAnswer && styles.correctOption,
-                answers[qIndex] === oIndex && 
-                oIndex !== question.correctAnswer && 
-                styles.wrongOption
+                answers[qIndex] === oIndex &&
+                  oIndex !== question.correctAnswer &&
+                  styles.wrongOption,
               ]}
             >
               <Text style={styles.optionText}>{option}</Text>
+              {oIndex === answers[qIndex] && (
+                <Text style={styles.answerLabel}>
+                  {oIndex === question.correctAnswer
+                    ? '(Your Answer - Correct)'
+                    : '(Your Answer - Incorrect)'}
+                </Text>
+              )}
+              {oIndex === question.correctAnswer && (
+                <Text style={styles.answerLabel}>(Correct Answer)</Text>
+              )}
             </View>
           ))}
         </View>
@@ -95,6 +104,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 10,
   },
+  congratulationsText: {
+    color: '#4CAF50',
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 10,
+  },
+  scoreSubtitle: {
+    color: 'white',
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: 'center',
+  },
   questionCard: {
     backgroundColor: 'white',
     padding: 15,
@@ -120,6 +141,11 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 16,
+  },
+  answerLabel: {
+    fontSize: 14,
+    fontStyle: 'italic',
+    marginTop: 4,
   },
   homeButton: {
     backgroundColor: '#2196F3',

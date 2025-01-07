@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
-import questions from '../data/questions'; 
+import questions from '../src/data/questions';
+
 
 const API_URL = 'http://10.32.9.17:3000/api';
 

@@ -23,7 +23,7 @@ function HomeScreen({ navigation }) {
             onPress={() => navigation.navigate('Quiz', { quizId: quiz.id })}
           >
             <Text style={styles.quizTitle}>{quiz.title}</Text>
-            <Text style={styles.quizInfo}>5 Questions</Text>
+            <Text style={styles.quizInfo}>15 Questions</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
