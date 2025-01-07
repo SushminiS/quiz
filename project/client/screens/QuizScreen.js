@@ -1,28 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
+import questions from '../data/questions'; 
 
-const API_URL = 'http://localhost:3000/api';
-
-const demoQuestion = {
-  question: 'What is the main function of proteins?',
-  options: [
-    'Energy storage',
-    'Building and repairing tissues',
-    'Temperature regulation',
-    'Hormone production',
-  ],
-  correctAnswer: 1,
-};
+const API_URL = 'http://10.32.9.17:3000/api';
 
 function QuizScreen({ route, navigation }) {
   const { quizId } = route.params;
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState({});
   const [previousAttempt, setPreviousAttempt] = useState(null);
-  
-  // Generate 5 questions using the demo question
-  const questions = Array(5).fill(demoQuestion);
 
   useEffect(() => {
     checkPreviousAttempt();
@@ -46,13 +33,14 @@ function QuizScreen({ route, navigation }) {
 
   const handleSubmit = async () => {
     try {
-      await axios.post(`${API_URL}/attempts`, {
+      const response = await axios.post(`${API_URL}/attempts`, {
         quizId,
         answers,
       });
       navigation.replace('Results', { quizId, answers });
     } catch (error) {
-      Alert.alert('Error', 'Failed to submit quiz');
+      console.error('Error submitting quiz:', error.response || error.message);
+      Alert.alert('Error', 'Failed to submit quiz: ' + (error.response?.data?.message || 'Unknown error'));
     }
   };
 
@@ -83,10 +71,7 @@ function QuizScreen({ route, navigation }) {
         {questions[currentQuestion].options.map((option, index) => (
           <TouchableOpacity
             key={index}
-            style={[
-              styles.option,
-              answers[currentQuestion] === index && styles.selectedOption
-            ]}
+            style={[styles.option, answers[currentQuestion] === index && styles.selectedOption]}
             onPress={() => handleAnswer(index)}
             disabled={previousAttempt !== null}
           >
@@ -106,8 +91,9 @@ function QuizScreen({ route, navigation }) {
 
         {currentQuestion < questions.length - 1 ? (
           <TouchableOpacity
-            style={styles.navButton}
+            style={[styles.navButton, !answers[currentQuestion] && styles.disabledButton]} 
             onPress={() => setCurrentQuestion(curr => curr + 1)}
+            disabled={!answers[currentQuestion]}
           >
             <Text style={styles.buttonText}>Next</Text>
           </TouchableOpacity>

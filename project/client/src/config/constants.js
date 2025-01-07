@@ -1,4 +1,4 @@
-export const API_URL = 'http://localhost:3000/api';
+const API_URL = 'http://10.32.9.17:3000/api';
 
 export const COLORS = {
   primary: '#2196F3',

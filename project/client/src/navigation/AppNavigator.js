@@ -4,6 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from '../components/HomeScreen';
 import QuizScreen from '../components/QuizScreen';
 import ResultsScreen from '../components/ResultsScreen';
+import questions from '../data/questions';
 
 const Stack = createStackNavigator();
 

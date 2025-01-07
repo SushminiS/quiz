@@ -5,6 +5,7 @@ import HomeScreen from './screens/HomeScreen';
 import QuizScreen from './screens/QuizScreen';
 import ResultsScreen from './screens/ResultsScreen';
 
+
 const Stack = createStackNavigator();
 
 export default function App() {
